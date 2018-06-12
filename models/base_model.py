@@ -8,6 +8,9 @@ import models
 
 class BaseModel():
         ''' Sets attributes and methods to be used in all future models '''
+
+        class_att_dict = dict()
+
         def __init__(self, *args, **kwargs):
                 ''' Initializes an object '''
                 for key in kwargs.keys():

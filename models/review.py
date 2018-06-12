@@ -7,14 +7,13 @@ from models.base_model import BaseModel
 class Review(BaseModel):
         ''' Review of a place '''
 
+        class_att_dict = {'place_id': str, 'user_id': str, 'text': str}
+
         def __init__(self, *args, **kwargs):
                 ''' Initailizes Review instance with
                 place_id, user_id, text (of review) '''
-                my_atts = ['place_id', 'user_id', 'text']
-                for attribute in my_atts:
-                        if attribute not in kwargs.keys():
-                                kwargs[attribute] = ''
-                if 'amenity_id' not in kwargs:
-                        kwargs['amenity_id'] = []
+                for key in Review.class_att_dict.keys():
+                        if key not in kwargs.keys():
+                                kwargs[key] = Review.class_att_dict[key]()
 
                 super().__init__(*args, **kwargs)

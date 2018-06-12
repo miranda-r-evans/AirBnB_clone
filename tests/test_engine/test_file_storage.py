@@ -12,7 +12,7 @@ class TestFileStorage(unittest.TestCase):
 
         def test_store_object(self):
                 ''' testing storage of objects '''
-                test_dict = {'id': 'testing_storage',
+                test_dict = {'id': 'test_storage',
                              'created_at': '2018-06-08T19:45:36.469639',
                              'updated_at': '2018-06-08T19:45:36.469672',
                              'test_attribute': 'still_arbitrary'}
@@ -21,15 +21,16 @@ class TestFileStorage(unittest.TestCase):
                 with open('file.json', 'r') as f:
                         file_dict = json.load(f)
 
-                self.assertTrue('BaseModel.testing_storage' in file_dict.keys())
-                self.assertEqual(a.to_dict(), file_dict['BaseModel.testing_storage'])
+                self.assertTrue('BaseModel.test_storage' in file_dict.keys())
+                self.assertEqual(a.to_dict(),
+                                 file_dict['BaseModel.test_storage'])
 
-                self.assertTrue('Place.testing_storage' in file_dict.keys())
-                self.assertEqual(b.to_dict(), file_dict['Place.testing_storage'])
+                self.assertTrue('Place.test_storage' in file_dict.keys())
+                self.assertEqual(b.to_dict(), file_dict['Place.test_storage'])
 
         def testing_all(self):
                 ''' testing retrieval of objects '''
-                test_dict = {'id': 'testing_retrieval',
+                test_dict = {'id': 'test_retrieval',
                              'created_at': '2018-06-08T19:45:36.469639',
                              'updated_at': '2018-06-08T19:45:36.469672',
                              'test_attribute': 'still_arbitrary'}
@@ -37,8 +38,8 @@ class TestFileStorage(unittest.TestCase):
                 d = Review(**test_dict)
                 all_objects = models.storage.all()
 
-                self.assertEqual(all_objects['BaseModel.testing_retrieval'].__dict__,
-                                 c.__dict__)
+                from_json = all_objects['BaseModel.test_retrieval'].__dict__
+                self.assertEqual(from_json, c.__dict__)
 
-                self.assertEqual(all_objects['Review.testing_retrieval'].__dict__,
+                self.assertEqual(all_objects['Review.test_retrieval'].__dict__,
                                  d.__dict__)

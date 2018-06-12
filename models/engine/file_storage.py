@@ -30,7 +30,12 @@ class FileStorage():
         def update(self, key, attribute_name, attribute_value):
                 ''' Updates an object '''
                 obj = self.__objects[key]
-                obj.__dict__[attribute_name] = attribute_value
+                if attribute_name in obj.class_att_dict.keys():
+                        obj.__dict__[attribute_name] = (
+                                obj.class_att_dict[attribute_name]
+                                (attribute_value))
+                else:
+                        obj.__dict__[attribute_name] = attribute_value
                 obj.__dict__['updated_at'] = datetime.today()
                 self.save()
 

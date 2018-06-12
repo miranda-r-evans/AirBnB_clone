@@ -2,6 +2,7 @@
 ''' Contains console '''
 
 import cmd
+import shlex
 import models
 from import_classes import *
 
@@ -19,7 +20,7 @@ class HBNBCommand(cmd.Cmd):
 
         def do_create(self, args):
                 '''Creates a new instance '''
-                args = args.split()
+                args = shlex.split(args)
                 if len(args) == 0:
                         print('** class name missing **')
                 elif args[0] not in my_classes:
@@ -29,28 +30,10 @@ class HBNBCommand(cmd.Cmd):
 
         def do_show(self, args):
                 '''Prints an instance '''
-                args = args.split()
+                args = shlex.split(args)
                 if len(args) == 0:
                         print('** class name missing **')
-                elif args[0] not in my_classes:
-                        print('** class doesn\'t exist **')
                         return
-
-                if len(args) == 1:
-                        print('** instance id missing **')
-                        return
-
-                for (key, value) in models.storage.all().items():
-                        if key == args[0] + '.' + args[1]:
-                                print(value)
-                                return
-                print('** no instance found **')
-
-        def do_destroy(self, args):
-                '''Destroy an instance '''
-                args = args.split()
-                if len(args) == 0:
-                        print('** class name missing **')
                 elif args[0] not in my_classes:
                         print('** class doesn\'t exist **')
                         return
@@ -60,15 +43,38 @@ class HBNBCommand(cmd.Cmd):
                         return
 
                 obj_dict = models.storage.all()
-                for (key, value) in obj_dict.items():
-                        if key == args[0] + '.' + args[1]:
-                                models.storage.delete(key)
-                                return
+                key = args[0] + '.' + args[1]
+                if key in obj_dict.keys():
+                        print(obj_dict[key])
+                        return
+
+                print('** no instance found **')
+
+        def do_destroy(self, args):
+                '''Destroy an instance '''
+                args = shlex.split(args)
+                if len(args) == 0:
+                        print('** class name missing **')
+                        return
+                elif args[0] not in my_classes:
+                        print('** class doesn\'t exist **')
+                        return
+
+                if len(args) == 1:
+                        print('** instance id missing **')
+                        return
+
+                obj_dict = models.storage.all()
+                key = args[0] + '.' + args[1]
+                if key in obj_dict.keys():
+                        models.storage.delete(key)
+                        return
+
                 print('** no instance found **')
 
         def do_all(self, args):
                 '''Prints all instances of a class or all classes '''
-                args = args.split()
+                args = shlex.split(args)
                 instance_list = []
                 for instance in args:
                         if args[0] not in my_classes:
@@ -81,11 +87,12 @@ class HBNBCommand(cmd.Cmd):
                 else:
                         for instance in models.storage.all().values():
                                 instance_list.append(instance)
+
                 print(instance_list)
 
         def do_update(self, args):
                 '''Updates an instance '''
-                args = args.split()
+                args = shlex.split(args)
                 if len(args) == 0:
                         print('** class name missing **')
                         return
@@ -95,18 +102,20 @@ class HBNBCommand(cmd.Cmd):
                 if len(args) == 1:
                         print('** instance id missing **')
                         return
-                for (key, value) in models.storage.all().items():
-                        if key == args[0] + '.' + args[1]:
-                                if len(args) == 2:
-                                        print('** attribute name missing **')
-                                        return
-                                if len(args) == 3:
-                                        print('** value missing **')
-                                        return
-                                models.storage.update(key, args[2], args[3])
-                                '''value.__dict__[args[2]] = args[3]'''
+
+                key = args[0] + '.' + args[1]
+                if key not in models.storage.all().keys():
+                        print('** no instance found **')
+                        return
+
+                if len(args) == 2:
+                        print('** attribute name missing **')
+                        return
+                for i in range(2, len(args), 2):
+                        if i + 1 >= len(args):
+                                print('** value missing **')
                                 return
-                print('** no instance found **')
+                        models.storage.update(key, args[i], args[i + 1])
 
         def emptyline(self):
                 ''' Does not repeat prev command on empty line '''
@@ -116,12 +125,36 @@ class HBNBCommand(cmd.Cmd):
                 ''' parses line if line has . syntax '''
                 if line.endswith(')'):
                         line = list(line.rpartition('.'))
-                        parameters = list(line[2].partition('('))[2]
+                        parameters = line[2].partition('(')[2]
                         parameters = parameters.rstrip(')')
-                        parameters = parameters.split(', ')
-                        parameters = ' '.join(parameters)
-                        line[2] = (line[2].partition('('))[0]
-                        return line[2] + ' ' + line[0] + ' ' + parameters
+                        line[2] = line[2].partition('(')[0]
+
+                        split_params = shlex.split(parameters)
+
+                        if (len(split_params) >= 2 and
+                           split_params[1].startswith('{')):
+                                parameters = parameters.partition('{')
+                                obj_id = parameters[0].rpartition(', ')[0]
+                                parameters = parameters[1] + parameters[2]
+                                parameters = eval(parameters)
+                                if type(parameters) is not dict:
+                                        print('** no sets **')
+                                        return
+
+                                new_str = ''
+                                for (key, value) in parameters.items():
+                                        pair = repr(key) + ' ' + repr(value)
+                                        new_str = ' '.join([new_str, pair])
+                                parameters = repr(obj_id) + ' ' + new_str
+                        else:
+                                for i in range(len(split_params) - 1):
+                                        split_params[i] = split_params[i][:-1]
+
+                                parameters = ' '.join(
+                                             [repr(x) for x in split_params])
+
+                        return ' '.join([line[2], line[0], parameters])
+
                 return line
 
 
