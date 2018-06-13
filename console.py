@@ -21,94 +21,142 @@ class HBNBCommand(cmd.Cmd):
 
         def do_create(self, args):
                 '''Creates a new instance '''
-                args = shlex.split(args)
-                if len(args) == 0:
-                        raise SyntaxError('** class name missing **')
                 try:
+                        args = shlex.split(args)
+                        if len(args) == 0:
+                                raise SyntaxError
                         eval('{}()'.format(args[0]))
+                except SyntaxError:
+                        print("** class name missing **")
                 except NameError:
                         print("** class doesn't exist **")
 
         def do_show(self, args):
                 '''Prints an instance '''
-                args = shlex.split(args)
-                if len(args) == 0:
-                        raise SyntaxError('** class name missing **')
-                elif args[0] not in my_classes:
-                        raise NameError('** class doesn\'t exist **')
+                try:
+                        args = shlex.split(args)
+                        if len(args) == 0:
+                                raise SyntaxError
+                        elif args[0] not in my_classes:
+                                raise NameError
 
-                if len(args) == 1:
-                        raise IndexError('** instance id missing **')
-
-                obj_dict = models.storage.all()
-                key = args[0] + '.' + args[1]
-                if key in obj_dict.keys():
-                        print(obj_dict[key])
-                else:
-                        raise KeyError('** no instance found **')
+                        if len(args) == 1:
+                                raise IndexError
+                        obj_dict = models.storage.all()
+                        key = args[0] + '.' + args[1]
+                        if key in obj_dict.keys():
+                                print(obj_dict[key])
+                        else:
+                                raise KeyError
+                except SyntaxError:
+                        print("** class name missing **")
+                except NameError:
+                        print("** class doesn't exist **")
+                except IndexError:
+                        print("** instance id missing **")
+                except KeyError:
+                        print("** no instance found **")
 
         def do_destroy(self, args):
                 '''Destroy an instance '''
-                args = shlex.split(args)
-                if len(args) == 0:
-                        raise SyntaxError('** class name missing **')
+                try:
+                        args = shlex.split(args)
+                        if len(args) == 0:
+                                raise SyntaxError
 
-                elif args[0] not in my_classes:
-                        raise NameError('** class doesn\'t exist **')
+                        if args[0] not in my_classes:
+                                raise NameError
 
-                if len(args) == 1:
-                        raise IndexError('** instance id missing **')
+                        if len(args) == 1:
+                                raise IndexError
 
-                obj_dict = models.storage.all()
-                key = args[0] + '.' + args[1]
-                if key in obj_dict.keys():
-                        models.storage.delete(key)
-                else:
-                        raise KeyError('** no instance found **')
+                        obj_dict = models.storage.all()
+                        key = args[0] + '.' + args[1]
+                        if key in obj_dict.keys():
+                                models.storage.delete(key)
+                        else:
+                                raise KeyError
+                except SyntaxError:
+                        print("** class name missing **")
+                except NameError:
+                        print("** class doesn't exist **")
+                except IndexError:
+                        print("** instance id missing **")
+                except KeyError:
+                        print("** no instance found **")
 
         def do_all(self, args):
                 '''Prints all instances of a class or all classes '''
-                args = shlex.split(args)
-                instance_list = []
-                for instance in args:
-                        if instance not in my_classes:
-                                raise NameError('** class doesn\'t exist **')
+                try:
+                        args = shlex.split(args)
+                        instance_list = []
+                        for instance in args:
+                                if instance not in my_classes:
+                                        raise NameError
 
-                if len(args) > 0:
-                        for instance in models.storage.all().values():
-                                if instance.__class__.__name__ in args:
+                        if len(args) > 0:
+                                for instance in models.storage.all().values():
+                                        if instance.__class__.__name__ in args:
+                                                instance_list.append(instance)
+                        else:
+                                for instance in models.storage.all().values():
                                         instance_list.append(instance)
-                else:
-                        for instance in models.storage.all().values():
-                                instance_list.append(instance)
 
-                print(instance_list)
+                        print(instance_list)
+                except NameError:
+                        print('** class doesn\'t exist **')
 
         def do_update(self, args):
-                '''Updates an instance '''
-                args = shlex.split(args)
+                ''' Updates an instance '''
+                try:
+                        args = shlex.split(args)
 
-                if len(args) == 0:
-                        raise SyntaxError('** class name missing **')
+                        if len(args) == 0:
+                                raise SyntaxError
 
-                if args[0] not in my_classes:
-                        raise NameError('** class doesn\'t exist **')
+                        if args[0] not in my_classes:
+                                raise NameError
 
-                if len(args) == 1:
-                        raise IndexError('** instance id missing **')
+                        if len(args) == 1:
+                                raise IndexError
 
-                key = args[0] + '.' + args[1]
-                if key not in models.storage.all().keys():
-                        raise KeyError('** no instance found **')
+                        key = args[0] + '.' + args[1]
+                        if key not in models.storage.all().keys():
+                                raise KeyError
 
-                if len(args) == 2:
-                        raise AttributeError('** attribute name missing **')
+                        if len(args) == 2:
+                                raise AttributeError
 
-                for i in range(2, len(args), 2):
-                        if i + 1 >= len(args):
-                                raise ValueError('** value missing **')
+                        for i in range(2, len(args), 2):
+                                if i + 1 >= len(args):
+                                        raise ValueError
+                                models.storage.update(key, args[i], args[i + 1])
+                except SyntaxError:
+                        print("** class name missing **")
+                except NameError:
+                        print("** class doesn't exist **")
+                except IndexError:
+                        print("** instance id missing **")
+                except KeyError:
+                        print("** no instance found **")
+                except AttributeError:
+                        print("** attribute name missing **")
+                except ValueError:
+                        print("** value missing **")
 
-                        models.storage.update(key, args[i], args[i + 1])
+        def do_count(self, args):
+                ''' Counts instances of a class '''
+                try:
+                        args = shlex.split(args)
+                        num = 0
+                        ig args[0] not in my_classes:
+                                raise NameError
+                        for instance in models.storage.all():
+                                if type(instance) == eval(args[0]):
+                                        num += 1
+                        print(num)
+                except NameError:
+                        print('** class doesn\'t exist **')
 
         def emptyline(self):
                 ''' Does not repeat prev command on empty line '''
