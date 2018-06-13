@@ -4,6 +4,7 @@
 import cmd
 import shlex
 import models
+import datetime
 from import_classes import *
 
 
@@ -93,6 +94,7 @@ class HBNBCommand(cmd.Cmd):
         def do_update(self, args):
                 '''Updates an instance '''
                 args = shlex.split(args)
+
                 if len(args) == 0:
                         print('** class name missing **')
                         return
@@ -124,8 +126,8 @@ class HBNBCommand(cmd.Cmd):
         def precmd(self, line):
                 ''' parses line if line has . syntax '''
                 if line.endswith(')'):
-                        line = list(line.rpartition('.'))
-                        parameters = line[2].partition('(')[2]
+                        line = list(line.partition('.'))
+                        parameters = (line[2].partition)('(')[2]
                         parameters = parameters.rstrip(')')
                         line[2] = line[2].partition('(')[0]
 
@@ -134,8 +136,10 @@ class HBNBCommand(cmd.Cmd):
                         if (len(split_params) >= 2 and
                            split_params[1].startswith('{')):
                                 parameters = parameters.partition('{')
-                                obj_id = parameters[0].rpartition(', ')[0]
+                                obj_id = shlex.split(parameters[0])[0]
+                                obj_id = obj_id[:-1]
                                 parameters = parameters[1] + parameters[2]
+
                                 parameters = eval(parameters)
                                 if type(parameters) is not dict:
                                         print('** no sets **')
@@ -145,7 +149,7 @@ class HBNBCommand(cmd.Cmd):
                                 for (key, value) in parameters.items():
                                         pair = repr(key) + ' ' + repr(value)
                                         new_str = ' '.join([new_str, pair])
-                                parameters = repr(obj_id) + ' ' + new_str
+                                parameters = obj_id + ' ' + new_str
                         else:
                                 for i in range(len(split_params) - 1):
                                         split_params[i] = split_params[i][:-1]
