@@ -13,10 +13,13 @@ class Place(BaseModel):
                           'price_by_night': float, 'latitude': float,
                           'longitude': float}
 
-        def __init__(self, *args, **kwargs):
-                ''' Initializes a Place instace '''
-                for key in Place.class_att_dict.keys():
-                        if key not in kwargs.keys():
-                                kwargs[key] = Place.class_att_dict[key]()
-
-                super().__init__(*args, **kwargs)
+        city_id = ''
+        state_id = ''
+        name = ''
+        description = ''
+        number_rooms = 0
+        number_bathrooms = 0
+        max_guest = 0
+        price_by_night = 0.0
+        latitude = 0.0
+        longitude = 0.0

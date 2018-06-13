@@ -9,10 +9,4 @@ class State(BaseModel):
 
         class_att_dict = {'name': str}
 
-        def __init__(self, *args, **kwargs):
-                ''' Initializes a State instance '''
-                for key in State.class_att_dict.keys():
-                        if key not in kwargs.keys():
-                                kwargs[key] = State.class_att_dict[key]()
-
-                super().__init__(*args, **kwargs)
+        name = ''

@@ -9,10 +9,8 @@ from datetime import datetime
 class FileStorage():
         ''' Performs various actions with a JSON '''
 
-        def __init__(self):
-                ''' Initializes fs object '''
-                self.__objects = dict()
-                self.__file_path = 'file.json'
+        __objects = dict()
+        __file_path = 'file.json'
 
         def all(self):
                 ''' Returns all objects stored in JSON '''
@@ -20,7 +18,9 @@ class FileStorage():
 
         def new(self, obj):
                 ''' Puts new object representation into a private variable '''
-                self.__objects[obj.__class__.__name__ + '.' + obj.id] = obj
+                if obj:
+                        key = obj.__class__.__name__ + '.' + obj.id
+                        self.__objects[key] = obj
 
         def delete(self, key):
                 ''' Deletes an object from the JSON '''
