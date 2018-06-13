@@ -13,73 +13,66 @@ class HBNBCommand(cmd.Cmd):
 
         def do_quit(self, args):
                 '''Quit command to exit the program '''
-                raise SystemExit
+                return True
 
         def do_EOF(self, args):
                 '''Quit command to exit the program '''
-                raise SystemExit
+                return True
 
         def do_create(self, args):
                 '''Creates a new instance '''
                 args = shlex.split(args)
                 if len(args) == 0:
-                        print('** class name missing **')
-                elif args[0] not in my_classes:
-                        print('** class doesn\'t exist **')
-                else:
+                        raise SyntaxError('** class name missing **')
+                try:
                         eval('{}()'.format(args[0]))
+                except NameError:
+                        print("** class doesn't exist **")
 
         def do_show(self, args):
                 '''Prints an instance '''
                 args = shlex.split(args)
                 if len(args) == 0:
-                        print('** class name missing **')
-                        return
+                        raise SyntaxError('** class name missing **')
                 elif args[0] not in my_classes:
-                        print('** class doesn\'t exist **')
-                        return
+                        raise NameError('** class doesn\'t exist **')
 
                 if len(args) == 1:
-                        print('** instance id missing **')
-                        return
+                        raise IndexError('** instance id missing **')
 
                 obj_dict = models.storage.all()
                 key = args[0] + '.' + args[1]
                 if key in obj_dict.keys():
                         print(obj_dict[key])
-                        return
-
-                print('** no instance found **')
+                else:
+                        raise KeyError('** no instance found **')
 
         def do_destroy(self, args):
                 '''Destroy an instance '''
                 args = shlex.split(args)
                 if len(args) == 0:
-                        print('** class name missing **')
-                        return
+                        raise SyntaxError('** class name missing **')
+
                 elif args[0] not in my_classes:
-                        print('** class doesn\'t exist **')
-                        return
+                        raise NameError('** class doesn\'t exist **')
 
                 if len(args) == 1:
-                        print('** instance id missing **')
-                        return
+                        raise IndexError('** instance id missing **')
 
                 obj_dict = models.storage.all()
                 key = args[0] + '.' + args[1]
                 if key in obj_dict.keys():
                         models.storage.delete(key)
-                        return
-
-                print('** no instance found **')
+                else:
+                        raise KeyError('** no instance found **')
 
         def do_all(self, args):
                 '''Prints all instances of a class or all classes '''
                 args = shlex.split(args)
                 instance_list = []
                 for instance in args:
-                        if args[0] not in my_classes:
-                                print('** class doesn\'t exist **')
+                        if instance not in my_classes:
+                                raise NameError('** class doesn\'t exist **')
 
                 if len(args) > 0:
                         for instance in models.storage.all().values():
@@ -96,27 +89,25 @@ class HBNBCommand(cmd.Cmd):
                 args = shlex.split(args)
 
                 if len(args) == 0:
-                        print('** class name missing **')
-                        return
+                        raise SyntaxError('** class name missing **')
+
                 if args[0] not in my_classes:
-                        print('** class doesn\'t exist **')
-                        return
+                        raise NameError('** class doesn\'t exist **')
+
                 if len(args) == 1:
-                        print('** instance id missing **')
-                        return
+                        raise IndexError('** instance id missing **')
 
                 key = args[0] + '.' + args[1]
                 if key not in models.storage.all().keys():
-                        print('** no instance found **')
-                        return
+                        raise KeyError('** no instance found **')
 
                 if len(args) == 2:
-                        print('** attribute name missing **')
-                        return
+                        raise AttributeError('** attribute name missing **')
+
                 for i in range(2, len(args), 2):
                         if i + 1 >= len(args):
-                                print('** value missing **')
-                                return
+                                raise ValueError('** value missing **')
+
                         models.storage.update(key, args[i], args[i + 1])
 
         def emptyline(self):

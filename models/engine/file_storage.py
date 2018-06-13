@@ -53,5 +53,5 @@ class FileStorage():
                                 self.__objects = {key: eval('{}(**{})'.format(
                                         value['__class__'], str(value))) for
                                         (key, value) in json.load(f).items()}
-                except:
+                except FileNotFoundError:
                         pass

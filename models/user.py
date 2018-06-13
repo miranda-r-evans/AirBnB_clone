@@ -10,10 +10,7 @@ class User(BaseModel):
         class_att_dict = {'email': str, 'password': str, 'first_name': str,
                           'last_name': str}
 
-        def __init__(self, *args, **kwargs):
-                ''' Initializes a User Instance '''
-                for key in User.class_att_dict.keys():
-                        if key not in kwargs.keys():
-                                kwargs[key] = User.class_att_dict[key]()
-
-                super().__init__(*args, **kwargs)
+        email = ''
+        password = ''
+        first_name = ''
+        last_name = ''
