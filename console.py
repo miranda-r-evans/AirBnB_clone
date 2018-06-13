@@ -149,7 +149,7 @@ class HBNBCommand(cmd.Cmd):
                 try:
                         args = shlex.split(args)
                         num = 0
-                        ig args[0] not in my_classes:
+                        if args[0] not in my_classes:
                                 raise NameError
                         for instance in models.storage.all():
                                 if type(instance) == eval(args[0]):
