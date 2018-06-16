@@ -152,8 +152,8 @@ class HBNBCommand(cmd.Cmd):
                         num = 0
                         if args[0] not in my_classes:
                                 raise NameError
-                        for instance in models.storage.all():
-                                if type(instance) == eval(args[0]):
+                        for instance in models.storage.all().values():
+                                if type(instance).__name__ == args[0]:
                                         num += 1
                         print(num)
                 except NameError:
