@@ -25,7 +25,8 @@ class HBNBCommand(cmd.Cmd):
                         args = shlex.split(args)
                         if len(args) == 0:
                                 raise SyntaxError
-                        eval('{}()'.format(args[0]))
+                        obj = eval('{}()'.format(args[0]))
+                        print(obj.id)
                 except SyntaxError:
                         print("** class name missing **")
                 except NameError:
