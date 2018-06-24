@@ -1,0 +1,64 @@
+.filters {
+        position: relative;
+        height: 70px;
+        width: 100%;
+        border: 1px solid #DDDDDD;
+        border-radius: 4px;
+}
+
+button {
+        position: absolute;
+        font-size: 18px;
+        background-color: #FF5A5F;
+        color: #FFFFFF;
+        height: 48px;
+        width: 20%;
+        border-radius: 4px;
+        top: 15%;
+        right: 30px;
+}
+
+button:hover {
+    opacity: .9;
+}
+
+.filters div {
+        display: inline-grid;
+}
+
+.locations, .amenities {
+    height: 100%;
+    width: 25%;
+}
+
+.locations {
+        border-right: 1px solid #DDDDDD;
+}
+
+.filters h3 {
+        font-weight: 600;
+        margin: 15px auto 0 30px;
+}
+
+.filters h4 {
+        font-weight: 400;
+        font-size: 14px;
+        margin: 0 auto 16px 30px;
+}
+
+.popover {
+        visibility: hidden;
+        background-color: #FAFAFA;
+        width: 100%;
+        border: 1px solid #DDDDDD;
+        border-radius: 4px;
+}
+
+.amenities:hover .popover,
+.locations:hover .popover {
+        visibility: visible;
+}
+
+.popover ul {
+    list-style-type: none;
+}
