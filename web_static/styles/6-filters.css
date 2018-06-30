@@ -19,46 +19,56 @@ button {
 }
 
 button:hover {
-    opacity: .9;
+        opacity: .9;
 }
 
 .filters div {
         display: inline-grid;
-}
+        height: 100%;
+        width: 25%;
 
-.locations, .amenities {
-    height: 100%;
-    width: 25%;
 }
 
 .locations {
         border-right: 1px solid #DDDDDD;
 }
 
-.filters h3 {
+h3 {
         font-weight: 600;
         margin: 15px auto 0 30px;
+        align-self: center;
 }
 
-.filters h4 {
+h4 {
         font-weight: 400;
         font-size: 14px;
-        margin: 0 auto 16px 30px;
+        margin: 0 auto auto 30px;
 }
 
 .popover {
         visibility: hidden;
         background-color: #FAFAFA;
-        width: 100%;
         border: 1px solid #DDDDDD;
         border-radius: 4px;
+        position: absolute;
+        top: 70px;
+        width: 100%;
+        padding-bottom: 45px;
 }
 
-.amenities:hover .popover,
-.locations:hover .popover {
+.locations .popover {
+        padding-bottom: 200px;
+}
+
+div:hover > div{
         visibility: visible;
 }
 
-.popover ul {
-    list-style-type: none;
+ul {
+        list-style-type: none;
+}
+
+li {
+        padding: 0 0 0 0;
+        margin: 0 0 0 0;
 }
